@@ -31,7 +31,7 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin1 = (req, res, next) => {
+isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
@@ -48,26 +48,8 @@ isAdmin1 = (req, res, next) => {
   });
 };
 
-isAdmin2 = (req, res, next) => {
-  Book.findByPk(req.bookId).then(book => {
-    book.getUsers().then(users => {
-      for (let i = 0; i < roles.length; i++) {
-        console.log(roles[i].name);
-        if (roles[i].name.toUpperCase() === "ADMIN") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send("Require Admin Role!");
-      return;
-    });
-  });
-};
-
 const authJwt = {};
 authJwt.verifyToken = verifyToken;
-authJwt.isAdmin1 = isAdmin1;
-authJwt.isAdmin2 = isAdmin2;
+authJwt.isAdmin = isAdmin;
 
 module.exports = authJwt;

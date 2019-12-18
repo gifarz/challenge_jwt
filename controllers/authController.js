@@ -85,9 +85,8 @@ exports.book = asyncMiddleware(async (req, res) => {
 
     res.status(200).send({
         status: "Buku baru telah disimpan!",
+        book: book
     })
-
-    await user.setBook(books);
 });
 
 exports.order = asyncMiddleware(async (req,res) => {

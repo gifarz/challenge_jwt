@@ -22,13 +22,13 @@ exports.addOrder = asyncMiddleware(async (req, res) => {
 });
 
 exports.getOrders = asyncMiddleware(async (req, res) => {
-  const orders = await Order.findAll({
-    attributes: ["id", "userId", "bookId"],
-  });
-res.status(200).json({
-    description: "All Orders",
-    order: orders
-})
+    const orders = await Order.findAll({
+       attributes: ["id", "userId", "bookId"],
+    });
+    res.status(200).json({
+        description: "All Orders",
+        order: orders
+    })
 });
 
 exports.orderId = asyncMiddleware(async (req, res) => {

@@ -1,104 +1,76 @@
 const db = require("../config/db.js");
-// const User = db.user;
-const Order = db.order;
+// const config = require("../config/config.js");
 const Book = db.book;
 const asyncMiddleware = require("express-async-handler");
 
-exports.books = asyncMiddleware(async (req, res) => {
-  const book = await Book.findAll({
-    attributes: ["title", "author"],
-    include: [
-      {
-        model: Order,
-        attributes: ["id"],
-        through: {
-          attributes: ["userId", "bookId"]
-        }
-      }
-    ]
-  });
-  res.status(200).json({
-    description: "All Book",
-    book: book
-  });
+exports.book = asyncMiddleware(async (req, res) => {
+    console.log("Book")
+
+    const book = await Book.create({
+        id: req.body.id,
+        title: req.body.title,
+        author: req.body.author,
+        pages: req.body.pages,
+        language: req.body.language
+    })
+
+    res.status(200).send({
+        status: "Buku baru telah disimpan!",
+        book: book
+    })
 });
 
-exports.bookContent = asyncMiddleware(async (req, res) => {
-  const book = await Book.findOne({
-    where: { id: req.userId },
-    attributes: ["name", "author"],
-    include: [
-      {
-        model: Order,
-        attributes: ["id"],
-        through: {
-          attributes: ["userId", "bookId"]
-        }
-      }
-    ]
-  });
-  res.status(200).json({
-    description: "User Content Page",
-    book: book
-  });
+exports.getBooks = asyncMiddleware(async (req, res) => {
+    const books = await Book.findAll({
+       attributes: ["id", "title", "author", "pages", "language"],
+    });
+    res.status(200).json({
+        description: "All Books",
+        book: books
+    })
 });
 
-// exports.userContent = asyncMiddleware(async (req, res) => {
-//   const user = await User.findOne({
-//     where: { id: req.userId },
-//     attributes: ["name", "user_id"],
+// const db = require("../config/db.js");
+// // const User = db.user;
+// const Order = db.order;
+// const Book = db.book;
+// const asyncMiddleware = require("express-async-handler");
+
+// exports.books = asyncMiddleware(async (req, res) => {
+//   const book = await Book.findAll({
+//     attributes: ["title", "author"],
 //     include: [
 //       {
-//         model: Role,
-//         attributes: ["id", "name"],
+//         model: Order,
+//         attributes: ["id"],
 //         through: {
-//           attributes: ["userId", "roleId"]
+//           attributes: ["userId", "bookId"]
+//         }
+//       }
+//     ]
+//   });
+//   res.status(200).json({
+//     description: "All Book",
+//     book: book
+//   });
+// });
+
+// exports.bookContent = asyncMiddleware(async (req, res) => {
+//   const book = await Book.findOne({
+//     where: { id: req.userId },
+//     attributes: ["name", "author"],
+//     include: [
+//       {
+//         model: Order,
+//         attributes: ["id"],
+//         through: {
+//           attributes: ["userId", "bookId"]
 //         }
 //       }
 //     ]
 //   });
 //   res.status(200).json({
 //     description: "User Content Page",
-//     user: user
-//   });
-// });
-
-// exports.adminBoard = asyncMiddleware(async (req, res) => {
-//   const user = await User.findOne({
-//     where: { id: req.userId },
-//     attributes: ["name", "user_id"],
-//     include: [
-//       {
-//         model: Role,
-//         attributes: ["id", "name"],
-//         through: {
-//           attributes: ["userId", "roleId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "Admin Board",
-//     user: user
-//   });
-// });
-
-// exports.managementBoard = asyncMiddleware(async (req, res) => {
-//   const user = await User.findOne({
-//     where: { id: req.userId },
-//     attributes: ["name", "user_id"],
-//     include: [
-//       {
-//         model: Role,
-//         attributes: ["id", "name"],
-//         through: {
-//           attributes: ["userId", "roleId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "Management Board",
-//     user: user
+//     book: book
 //   });
 // });
