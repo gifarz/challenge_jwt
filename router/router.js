@@ -6,7 +6,7 @@ const orderController = require ("../controllers/orderController.js");
 const bookController = require("../controllers/bookController.js");
 
 module.exports = function(app) {
-  // Auth
+  // USER
   app.post("/api/auth/signup",[
     verifySignUp.checkDuplicateName,
     verifySignUp.checkRolesExisted
@@ -14,23 +14,25 @@ module.exports = function(app) {
     authController.signup
   );
   app.post("/api/auth/signin", authController.signin);
-  app.post("/api/auth/signin/order", [authJwt.verifyToken], bookController.book);
-  app.post("/api/auth/signin/order/add", [authJwt.verifyToken], orderController.addOrder);
 
-  // get all user
   app.get("/api/users", [authJwt.verifyToken, authJwt.isAdmin], userController.users);
-  app.get("/api/books", [authJwt.verifyToken], bookController.getBooks);
-  app.get("/api/orders", [authJwt.verifyToken], orderController.getOrders);
-  app.get("/api/orders/:id", [authJwt.verifyToken], orderController.orderId);
-
-  // get 1 user according to roles
   app.get("/api/test/user", [authJwt.verifyToken], userController.userContent);
-
   app.get(
     "/api/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     userController.adminBoard
   );
+
+  // BOOK
+  app.get("/api/books", [authJwt.verifyToken], bookController.getBooks);
+  app.get("/api/books/:id",[authJwt.verifyToken], bookController.getBookById);
+  app.delete("/api/books/:id",[authJwt.verifyToken], bookController.deleteBook);
+
+  // ORDER
+  app.post("/api/auth/signin/order", [authJwt.verifyToken], bookController.book);
+  app.post("/api/auth/signin/order/add", [authJwt.verifyToken], orderController.addOrder);
+  app.get("/api/orders", [authJwt.verifyToken], orderController.getOrders);
+  app.get("/api/orders/:id", [authJwt.verifyToken], orderController.orderId);
 
   // error handler 404
   app.use(function(req, res, next) {

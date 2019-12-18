@@ -22,55 +22,36 @@ exports.book = asyncMiddleware(async (req, res) => {
 
 exports.getBooks = asyncMiddleware(async (req, res) => {
     const books = await Book.findAll({
-       attributes: ["id", "title", "author", "pages", "language"],
+       attributes: ["id", "title", "author", "pages", "language"]
     });
     res.status(200).json({
         description: "All Books",
         book: books
     })
-});
+})
 
-// const db = require("../config/db.js");
-// // const User = db.user;
-// const Order = db.order;
-// const Book = db.book;
-// const asyncMiddleware = require("express-async-handler");
+exports.getBookById = asyncMiddleware(async (req, res) => {
+    const book = await Book.findOne({
+        attributes: ["id", "title", "author", "pages", "language"],
+        where: {
+            id: req.params.id
+        }
+    })
+    res.status(200).json({
+        description: "Book By ID",
+        book: book
+    })
+})
 
-// exports.books = asyncMiddleware(async (req, res) => {
-//   const book = await Book.findAll({
-//     attributes: ["title", "author"],
-//     include: [
-//       {
-//         model: Order,
-//         attributes: ["id"],
-//         through: {
-//           attributes: ["userId", "bookId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "All Book",
-//     book: book
-//   });
-// });
+exports.deleteBook = asyncMiddleware(async (req, res) => {
+    const book = await Book.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
 
-// exports.bookContent = asyncMiddleware(async (req, res) => {
-//   const book = await Book.findOne({
-//     where: { id: req.userId },
-//     attributes: ["name", "author"],
-//     include: [
-//       {
-//         model: Order,
-//         attributes: ["id"],
-//         through: {
-//           attributes: ["userId", "bookId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "User Content Page",
-//     book: book
-//   });
-// });
+    res.status(200).json({
+        message: "Book has been deleted",
+        book: book
+    })
+})
